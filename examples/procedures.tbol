@@ -1,0 +1,31 @@
+{ TBOL procedure call example }
+PROGRAM procedures;
+
+PROC main =
+  { Initialize }
+  MOVE 10, I1;
+
+  { Call helper with parameters }
+  LINK double, I1;
+
+  { I1 should now be 20 }
+  LINK add_value, I1, 5;
+
+  { I1 should now be 25 }
+END_PROC
+
+PROC double =
+  { P1 contains the value to double }
+  MOVE P1, I2;
+  MULTIPLY 2, I2;
+  MOVE I2, I1;
+  RETURN;
+END_PROC
+
+PROC add_value =
+  { P1 = base value, P2 = value to add }
+  MOVE P1, I2;
+  ADD P2, I2;
+  MOVE I2, I1;
+  RETURN;
+END_PROC

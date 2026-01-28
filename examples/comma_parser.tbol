@@ -1,0 +1,39 @@
+{ TBOL comma-separated value parser }
+PROGRAM comma_parser;
+
+PROC main =
+  { Input string with comma-separated values }
+  MOVE P1, &1;
+  MOVE 0, I1;      { Counter for items }
+  MOVE 1, I4;      { Current output field number }
+
+parse_loop:
+  { Find next comma }
+  INSTR &1, ',', I2;
+
+  { If no comma found, process last item and exit }
+  IF I2 = 0 THEN DO
+    MOVE &1, &10(I4);
+    ADD 1, I1;
+    GOTO done;
+  END;
+
+  { Extract item before comma }
+  SUBTRACT 1, I2;
+  SUBSTR &1, 1, I2, &10(I4);
+  ADD 1, I1;
+  ADD 1, I4;
+
+  { Remove processed part from string }
+  ADD 2, I2;
+  LENGTH &1, I3;
+  SUBTRACT I2, I3;
+  ADD 1, I3;
+  SUBSTR &1, I2, I3, &1;
+
+  GOTO parse_loop;
+
+done:
+  { Store count in I1 }
+  MOVE I1, SYS_RETURN_CODE;
+END_PROC
